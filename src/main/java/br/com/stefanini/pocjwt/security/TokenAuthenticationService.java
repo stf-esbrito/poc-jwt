@@ -13,24 +13,21 @@ public class TokenAuthenticationService {
 	static final String HEADER_STRING = "Authorization";
 	
 	public static String addAuthentication(String username) {
-		String JWT = Jwts.builder()
-					.setSubject(username)
-					.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-					.signWith(SignatureAlgorithm.HS512, SECRET)
-					.compact();
-		return JWT;
+		return Jwts.builder()
+				.setSubject(username)
+				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+				.signWith(SignatureAlgorithm.HS512, SECRET)
+				.compact();
 	}
 	
 	static String getAuthentication(HttpServletRequest request) {
 		String token = request.getHeader(HEADER_STRING);
 		if(token != null) {
-			
-			String user = Jwts.parser()
+			return Jwts.parser()
 					.setSigningKey(SECRET)
 					.parseClaimsJws(token)
 					.getBody()
 					.getSubject();
-			return user;
 			
 		}
 		return null;
